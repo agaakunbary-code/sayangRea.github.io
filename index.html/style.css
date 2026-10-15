@@ -1,0 +1,414 @@
+/* =========================================================
+   1. VARIABEL & RESET DASAR
+   ========================================================= */
+:root {
+  --bg-dark: #1F0407;
+  --maroon-main: #580B14;
+  --maroon-card: #3B060D;
+  --maroon-light: #8A1524;
+  --accent-gold: #E5B26A;
+  --text-light: #FDF8F8;
+  --text-muted: #D1B2B5;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-hand: 'Caveat', cursive;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Container Animasi Love Melayang di Background */
+.floating-hearts-bg {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none !important;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.floating-heart {
+  position: absolute;
+  bottom: -20px;
+  color: rgba(255, 255, 255, 0.15);
+  animation: riseUp linear infinite;
+}
+
+@keyframes riseUp {
+  0% {
+    transform: translateY(0) scale(0.6) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-105vh) scale(1.2) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Container Pembungkus Aplikasi */
+.app-container {
+  width: 100%;
+  max-width: 480px;
+  height: 100vh;
+  max-height: 860px;
+  background: var(--maroon-main);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1;
+}
+
+@media (min-width: 500px) {
+  .app-container {
+    border-radius: 28px;
+    height: 92vh;
+    border: 1px solid rgba(229, 178, 106, 0.2);
+  }
+}
+
+/* =========================================================
+   2. MUSIC PLAYER FLOATING
+   ========================================================= */
+.music-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 100;
+  background: rgba(31, 4, 7, 0.7);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.music-btn:hover {
+  transform: scale(1.05);
+  background: var(--accent-gold);
+  color: var(--bg-dark);
+}
+
+/* =========================================================
+   3. TAMPILAN SLIDE & NAVIGASI
+   ========================================================= */
+.slides-wrapper {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  padding: 30px 24px 90px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(20px);
+  overflow-y: auto;
+}
+
+.slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Tombol Navigasi Bawah */
+.nav-bar {
+  position: absolute;
+  bottom: 0; left: 0; width: 100%;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to top, rgba(31,4,7,0.95), transparent);
+  z-index: 10;
+}
+
+.btn-nav {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-nav:hover:not(:disabled) {
+  background: var(--accent-gold);
+  color: var(--bg-dark);
+  border-color: var(--accent-gold);
+}
+
+.btn-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.dots-indicator {
+  display: flex;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background: var(--accent-gold);
+  width: 20px;
+  border-radius: 10px;
+}
+
+/* =========================================================
+   4. ELEMEN DEKORASI & TEKS
+   ========================================================= */
+.badge {
+  background: rgba(229, 178, 106, 0.15);
+  color: var(--accent-gold);
+  border: 1px solid rgba(229, 178, 106, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+p.subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.card-box {
+  background: var(--maroon-card);
+  border: 1px solid rgba(229, 178, 106, 0.15);
+  border-radius: 16px;
+  padding: 18px;
+  width: 100%;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+/* =========================================================
+   5. STYLES KHUSUS SLIDE 3: ALBUM WANITA CANTIK
+   ========================================================= */
+.polaroid-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.polaroid {
+  background: #FFFFFF;
+  padding: 8px 8px 12px 8px;
+  border-radius: 6px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+  transform: rotate(var(--rot));
+  transition: all 0.3s ease;
+}
+
+.polaroid:hover {
+  transform: scale(1.05) rotate(0deg);
+  z-index: 5;
+}
+
+.polaroid img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.polaroid-caption {
+  color: #222;
+  font-family: var(--font-hand);
+  font-size: 1.1rem;
+  margin-top: 6px;
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* =========================================================
+   6. STYLES KHUSUS SLIDE 4: HAL KECIL
+   ========================================================= */
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.check-icon {
+  color: var(--accent-gold);
+  font-size: 1.1rem;
+}
+
+/* =========================================================
+   7. STYLES KHUSUS SLIDE 5: AMPLOP SURAT DIGITAL
+   ========================================================= */
+.envelope-wrapper {
+  width: 100%;
+  max-width: 280px;
+  margin: 15px auto;
+  cursor: pointer;
+}
+
+.envelope {
+  background: var(--maroon-light);
+  border: 2px dashed var(--accent-gold);
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.envelope:hover {
+  transform: translateY(-4px);
+  background: #9E1B2D;
+}
+
+.letter-popup {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.letter-popup.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.letter-content {
+  background: #FFFBF5;
+  color: #333;
+  padding: 24px;
+  border-radius: 20px;
+  max-width: 400px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.letter-content h2 {
+  font-family: var(--font-hand);
+  font-size: 2rem;
+  color: var(--maroon-main);
+  margin-bottom: 12px;
+}
+
+.letter-content p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 12px;
+}
+
+.close-letter-btn {
+  margin-top: 15px;
+  width: 100%;
+  background: var(--maroon-main);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Pastikan lock-box berada di atas layer background dan pointer-nya aktif */
+.lock-box {
+  text-align: center;
+  background: rgba(0, 0, 0, 0.35);
+  cursor: pointer !important; /* <--- Tambahkan baris ini */
+  border: 1px dashed var(--accent-gold);
+  transition: all 0.3s ease;
+  user-select: none;
+  position: relative;
+  z-index: 10; /* <--- Tambahkan baris ini */
+}
+
+/* Matikan pointer pada teks/ikon di dalam lock-box agar klik langsung kena box-nya */
+.lock-icon, .lock-title {
+  pointer-events: none;
+}
+
